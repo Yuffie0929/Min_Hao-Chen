@@ -5,7 +5,8 @@ let goods = [
     description: '有人说意大利经典是赛百味最大、最多肉、最美味的一款三明治。热那亚式萨拉米香肠、意大利辣香肠和火腿切片造就的经典美味倍受青睐。',
     image: '101',
     sold: 1014,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '102',
@@ -13,7 +14,8 @@ let goods = [
     description: '意大利风味香肠肉香汁浓，热烤奶酪入口即融，搭配喜欢的面包、酱料和蔬菜，味香萦绕齿间回味无穷。',
     image: '102',
     sold: 1029,
-    price: 3
+    price: 3,
+    unit: ''
   },
   {
     id: '103',
@@ -21,7 +23,8 @@ let goods = [
     description: '柔嫩无骨的鸡排烤得恰到好处，配上自选的新鲜蔬菜和独特调味品，每日烘焙的面包，鲜香四溢。',
     image: '103',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '104',
@@ -29,7 +32,8 @@ let goods = [
     description: '柔嫩火鸡胸切片，配以自选的新鲜蔬菜和酱料，风味独特。搭配墨西哥辣椒，酸辣美味挡不住。',
     image: '104',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '105',
@@ -37,7 +41,8 @@ let goods = [
     description: '在柔嫩的鸡肉切片上淋上少量照烧调味酱，搭配自选的新鲜蔬菜和调味品，一起裹入每日烘焙的面包，亚洲口味心动不已。',
     image: '105',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '106',
@@ -45,7 +50,8 @@ let goods = [
     description: '金枪鱼与奶油蛋黄酱的混合，创造出世上最妙不可言的滋味。SUBWAY®赛百味金枪鱼三明治可自选新鲜蔬菜、调味品以及每日烘焙的各式面包。',
     image: '106',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '107',
@@ -53,7 +59,8 @@ let goods = [
     description: '柔嫩的鸡胸肉，烟熏的火腿，松脆的培根，热融融的奶酪，配以清脆的蔬菜和独特的调味品，一切都融合在每日烘焙的面包内，这种美妙滋味只能意会不可言传。',
     image: '107',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '108',
@@ -61,7 +68,8 @@ let goods = [
     description: '一款受人欢迎的经典美味，低于6克脂肪含量，柔嫩的香烤牛肉切片搭配自选的新鲜蔬菜和调味品，更健康更美味。',
     image: '108',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '109',
@@ -69,7 +77,8 @@ let goods = [
     description: '令人垂涎三尺的柔嫩牛排切片，佐以洋葱和青椒，覆上一层热融融的奶酪，再配上各种自选的新鲜蔬菜和调味品，夹在每日烘焙的面包里，热气腾腾，美味难敌。',
     image: '109',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '110',
@@ -77,7 +86,8 @@ let goods = [
     description: '柔嫩的精选鸡胸肉，烟熏的香烤牛肉，美味的火腿切片，每日烘焙的面包，配以自选的清脆蔬菜和调味品，真正的百味融合，舍我其谁！',
     image: '110',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '111',
@@ -85,7 +95,8 @@ let goods = [
     description: '鲜嫩味美的火腿配上SUBWAY®赛百味餐厅特有的蜜汁芥末酱，搭配您自选最爱的蔬菜，美味难以阻挡',
     image: '111',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '112',
@@ -93,7 +104,8 @@ let goods = [
     description: '柔嫩火鸡胸切片，配以自选的新鲜蔬菜和酱料，风味独特。搭配墨西哥辣椒，酸辣美味挡不住。',
     image: '112',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: ''
   },
   {
     id: '401',
@@ -101,7 +113,8 @@ let goods = [
     description: '每日下单，现烤甜饼',
     image: '401',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '个'
   },
   {
     id: '402',
@@ -109,7 +122,8 @@ let goods = [
     description: '每日下单，现烤甜饼',
     image: '402',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '个'
   },
   {
     id: '403',
@@ -117,23 +131,26 @@ let goods = [
     description: '每日下单，现烤甜饼。0克反式脂肪酸。',
     image: '403',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '个'
   },
   {
     id: '501',
-    name: '百事可乐（听）',
-    description: '百事可乐（听）',
+    name: '百事可乐',
+    description: '百事可乐',
     image: '501',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '听'
   },
   {
     id: '502',
-    name: '都乐果汁苹果（瓶）',
-    description: '都乐果汁苹果（瓶）',
+    name: '都乐果汁苹果',
+    description: '都乐果汁苹果',
     image: '502',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '瓶'
   },
   {
     id: '503',
@@ -141,7 +158,8 @@ let goods = [
     description: '都乐果汁葡萄（瓶）',
     image: '503',
     sold: 1030,
-    price: 2
+    price: 2,
+    unit: '瓶'
   },
 ];
 
@@ -197,6 +215,15 @@ let goodsList = [
     goods: ['401', '402', '403']
   }
 ];
+
+/*获取门店信息*/
+/*获取产品详情*/
+/*获取品类详情*/
+/*获取促销详情*/
+
+/*菜品同步接口*/
+
+
 module.exports = {
   goods,
   goodsList

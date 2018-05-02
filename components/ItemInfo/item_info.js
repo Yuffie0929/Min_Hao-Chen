@@ -7,6 +7,14 @@ Component({
    * 用于组件自定义设置
    */
   properties: {
+    good: {
+      type: Object,
+      value: {}
+    },
+    num: {
+      type: [String, Number],
+      value: ''
+    },
     // 弹窗标题
     title: {            // 属性名
       type: String,     // 类型（必填），目前接受的类型包括：String, Number, Boolean, Object, Array, null（表示任意类型）
@@ -35,7 +43,7 @@ Component({
    */
   data: {
     // 弹窗显示控制
-    isShow:false
+    isShow: false
   },
 
   /**
@@ -43,10 +51,6 @@ Component({
    * 更新属性和数据的方法与更新页面数据的方法类似
    */
   methods: {
-    /*
-     * 公有方法
-     */
-
     //隐藏弹框
     hideDialog(){
       this.setData({
@@ -63,13 +67,15 @@ Component({
     * 内部私有方法建议以下划线开头
     * triggerEvent 用于触发事件
     */
-    _cancelEvent(){
-      //触发取消回调
-      this.triggerEvent("cancelEvent")
+    _tapMinusCart(){
+      this.triggerEvent("minusEvent")
     },
-    _confirmEvent(){
-      //触发成功回调
-      this.triggerEvent("confirmEvent");
+    _tapAddCart(){
+      this.triggerEvent("addEvent");
+    },
+    _closeEvent(){
+      this.hideDialog();
+      this.triggerEvent("closeEvent")
     }
   }
 })

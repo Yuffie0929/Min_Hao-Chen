@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "dialog": "/components/Dialog/dialog"
+    "dialog": "/components/ItemInfo/item_info"
   }
 }

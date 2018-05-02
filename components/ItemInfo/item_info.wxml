@@ -1,11 +1,29 @@
-<view class='wx_dialog_container' hidden="{{!isShow}}">
-  <view class='wx-mask'></view>
-  <view class='wx-dialog'>
-    <view class='wx-dialog-title'>{{ title }}</view>
-    <view class='wx-dialog-content'>{{ content }}</view>
-    <view class='wx-dialog-footer'>
-      <view class='wx-dialog-btn' catchtap='_cancelEvent'>{{ cancelText }}</view>
-      <view class='wx-dialog-btn' catchtap='_confirmEvent'>{{ confirmText }}</view>
+<view class='c-item_info-container' hidden="{{!isShow}}">
+  <view class='wx-mask' bindtap='_closeEvent'></view>
+  <view class='c-item_info'>
+    <view class="c-item_info-image">
+      <image src="{{good.pic}}" mode="widthFix"></image>
     </view>
+    <view class='c-item_info-content'>
+      <view class="name ellipsis">{{good.name}}</view>
+      <view class="sold">月售{{good.sold}}</view>
+      <view class="desc ellipsis">{{good.description}}</view>
+    </view>
+    <view class='c-item_info-footer'>
+      <text class="price">¥{{good.price}}</text>
+      <text class="unit" wx:if="{{good.unit}}">/{{good.unit}}</text>
+      <view class="delCart" catchtap="_tapMinusCart"
+            wx:if="{{num > 0}}">
+        <image src="/imgs/shop/minus.png"></image>
+      </view>
+      <view class="num"
+            wx:if="{{num !== 0}}">{{num}}</view>
+      <view class="addCart" catchtap="_tapAddCart">
+        <image src="/imgs/shop/plus.png"></image>
+      </view>
+    </view>
+  </view>
+  <view class="c-item_info-close" bindtap='_closeEvent'>
+    <image src="images/icon_close.png"></image>
   </view>
 </view>

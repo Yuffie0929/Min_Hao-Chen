@@ -1,9 +1,12 @@
-var app = getApp();
-var server = require('../../utils/server');
-var data = require('../../utils/data');
+const app = getApp();
+const server = require('../../utils/server');
+const data = require('../../utils/data');
+const util = require('../../utils/util');
+
 Page({
 	data: {
-		goods: [],
+		goodId: '',
+		goods: {},
 		goodsList: [],
 		cart: {
 			count: 0,
@@ -15,13 +18,11 @@ Page({
 			logo: '../../imgs/web/logo.jpg',
 			name: '赛百味(复兴门百盛店)',
       desc: '专注味觉100年'
-		},
-    dialog: {}
+		}
 	},
   onReady: function () {
     //获得dialog组件
     this.dialog = this.selectComponent("#dialog");
-    console.log()
   },
 	onLoad: function (options) {
 		let goods = {};
@@ -135,7 +136,38 @@ Page({
 		});
 	},
 	submit: function (e) {
-		server.sendTemplate(e.detail.formId, null, function (res) {
+		let cartList = [];
+		let goodsObj = this.data.goods;
+		let cartObj = this.data.cart.list;
+    Object.keys(cartObj).forEach((key)=>{
+    	if(cartObj[key]){
+        goodsObj[key]['count'] = cartObj[key];
+        cartList.push(goodsObj[key]);
+			}
+    });
+    console.log(cartList);
+    wx.setStorageSync('__goods_list', cartList);
+    let that = this;
+    util.navigateTo({
+      url: '../order/order',
+			params: {
+
+			},
+      fail:function(e){
+        wx.showToast({
+          title: e.errMsg,
+          icon: "none",
+          duration: 2000,
+          success: function () {
+            setTimeout(function () {
+              that.data.go = true;
+            }, 2000)
+          }
+        })
+      },
+    })
+
+		/*server.sendTemplate(e.detail.formId, null, function (res) {
 			if (res.data.errorcode == 0) {
 				wx.showModal({
 					showCancel: false,
@@ -150,23 +182,25 @@ Page({
 			}
 		}, function (res) {
 			console.log(res)
-		});
+		});*/
+
 	},
 
 
-  showDialog(){
+	/*餐品详情*/
+  _showDialog(e){
+  	this.setData({
+      goodId: e.currentTarget.dataset.id
+		});
     this.dialog.showDialog();
   },
-	/*取消事件*/
-  _cancelEvent(){
-    console.log('你点击了取消');
-    this.dialog.hideDialog();
+  _minusEvent(){
+    /*减法*/
+    this.addCart(this.data.goodId, -1);
   },
-	/*确认事件*/
-  _confirmEvent(){
-    console.log('你点击了确定');
-    this.dialog.hideDialog();
+  _addEvent(){
+    /*加法*/
+    this.addCart(this.data.goodId, 1);
   }
-
 });
 

@@ -122,6 +122,12 @@ page {
 	font-size: 36rpx;
 	line-height: 40rpx;
 }
+.goods-container .goods .unit {
+	padding-left: 6rpx;
+	color: #c8c8c8;
+	font-size: 26rpx;
+	line-height: 40rpx;
+}
 .goods-container .goods .delCart {
 	position: absolute;
 	right: 160rpx;

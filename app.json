@@ -1,8 +1,11 @@
 {
 	"debug": true,
 	"pages": [
-
+		"page/order/order",
 		"page/shop/shop",
+
+
+
 		"page/dialog/dialog",
 		"page/index/index",
 		"page/index/search",

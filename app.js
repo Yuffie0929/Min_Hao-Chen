@@ -29,6 +29,8 @@ App({
 		console.log('App Hide')
 	},
 	globalData: {
+    syncOrdering: false, //是否同步点餐
+		syncOrderingTime: 5 * 1000, //同步间隔
 		hasLogin: false,
 		shops: [
 			{
