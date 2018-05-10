@@ -1,16 +1,8 @@
 {
 	"debug": true,
 	"pages": [
-		"page/order/order",
 		"page/shop/shop",
-
-
-
-		"page/dialog/dialog",
-		"page/index/index",
-		"page/index/search",
-
-		"page/mine/mine"
+		"page/order/order"
 	],
 	"window": {
 		"navigationBarBackgroundColor": "#000",
@@ -18,26 +10,6 @@
 		"backgroundColor": "#efefef",
 		"backgroundTextStyle": "dark",
 		"navigationBarTitleText": "外卖订餐"
-	},
-	"tabBar": {
-		"color": "#878787",
-		"selectedColor": "#000",
-		"borderStyle": "black",
-		"backgroundColor": "#fcfcfc",
-		"list": [
-			{
-				"pagePath": "page/index/index",
-				"iconPath": "imgs/tabBar/home_2.png",
-				"selectedIconPath": "imgs/tabBar/home_1.png",
-				"text": "首页"
-			},
-			{
-				"pagePath": "page/mine/mine",
-				"iconPath": "imgs/tabBar/mine_2.png",
-				"selectedIconPath": "imgs/tabBar/mine_1.png",
-				"text": "我的"
-			}
-		]
 	},
 	"networkTimeout": {
 		"request": 10000,

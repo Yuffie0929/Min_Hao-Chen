@@ -1,13 +1,13 @@
 const app = getApp();
-const server = require('../../utils/server');
+const Data = require('../../utils/data/data');
+const Util = require('../../utils/util');
 const data = require('../../utils/data');
-const util = require('../../utils/util');
-
 Page({
 	data: {
 		goodId: '',
 		goods: {},
-		goodsList: [],
+    categories: [],
+    discounts: {},
 		cart: {
 			count: 0,
 			total: 0,
@@ -20,32 +20,72 @@ Page({
       desc: '专注味觉100年'
 		}
 	},
-  onReady: function () {
-    //获得dialog组件
-    this.dialog = this.selectComponent("#dialog");
-  },
-	onLoad: function (options) {
-		let goods = {};
-    data.goods.map((good)=>{
-    	good.pic = '../../imgs/web/' + good.image + '.jpg';
-			delete good.image;
-      goods[good.id] = good;
-    });
-    this.setData({
-      goodsList: data.goodsList,
-      goods: goods
-    });
-
-		let that = this;
+  onLoad: function (options) {
+    let that = this;
     wx.setNavigationBarTitle({
       title: that.data.shop.name
     })
-	},
-	onShow: function () {
+  },
+  onReady: function () {
+    this.dialog = this.selectComponent("#dialog");
+    this.getGoods();
+    this.getCategories();
+    this.getDiscount();
+  },
+
+	getDiscount(){
 		this.setData({
-			classifySeleted: this.data.goodsList[0].id
+      discounts: this.formatDiscount(data.discounts)
 		});
 	},
+	formatDiscount(discounts){
+    let obj = {};
+    discounts.map((discount)=>{
+    	if(discount.type === 'CU_XIAO'){
+    		let obj = {};
+    		discount.items.map((item)=>{
+          obj[item.item_id] = item;
+    		});
+        discount.items = obj;
+			}
+      obj[discount.type] = discount;
+    });
+    return obj;
+	},
+
+	getCategories(){
+    let that = this;
+    Data.getCategories({
+      success_0(res){
+      	let classifySeleted = res.length === 0 ? '' : res[0].id;
+        that.setData({
+          categories: res,
+          classifySeleted
+        });
+      }
+    })
+	},
+
+	getGoods(){
+		let that = this;
+		Data.getGoods({
+			success_0(res){
+        that.setData({
+          goods: that.formatGoodsData(res)
+        });
+			}
+		})
+	},
+	formatGoodsData(goods){
+    let obj = {};
+    goods.map((good)=>{
+      good.pic = '../../imgs/web/' + good.image + '.jpg';
+      delete good.image;
+      obj[good.id] = good;
+    });
+    return obj;
+	},
+
 	tapAddCart: function (e) {
 		this.addCart(e.target.dataset.id, 1);
 	},
@@ -101,8 +141,8 @@ Page({
 			scrollTop = e.detail.scrollTop / scale,
 			h = 0,
 			classifySeleted,
-			len = this.data.goodsList.length;
-		this.data.goodsList.forEach(function (classify, i) {
+			len = this.data.categories.length;
+		this.data.categories.forEach(function (classify, i) {
 			var _h = 70 + classify.goods.length * (46 * 3 + 20 * 2);
 			if (scrollTop >= h - 100 / scale) {
 				classifySeleted = classify.id;
@@ -148,7 +188,7 @@ Page({
     console.log(cartList);
     wx.setStorageSync('__goods_list', cartList);
     let that = this;
-    util.navigateTo({
+    wx.navigateTo({
       url: '../order/order',
 			params: {
 

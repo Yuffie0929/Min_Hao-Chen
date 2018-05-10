@@ -1,11 +1,11 @@
-let goods = [
+const goods = [
   {
     id: '101',
     name: '意大利经典 Italian B.M.T.™',
     description: '有人说意大利经典是赛百味最大、最多肉、最美味的一款三明治。热那亚式萨拉米香肠、意大利辣香肠和火腿切片造就的经典美味倍受青睐。',
     image: '101',
     sold: 1014,
-    price: 2,
+    price: 22,
     unit: ''
   },
   {
@@ -14,7 +14,7 @@ let goods = [
     description: '意大利风味香肠肉香汁浓，热烤奶酪入口即融，搭配喜欢的面包、酱料和蔬菜，味香萦绕齿间回味无穷。',
     image: '102',
     sold: 1029,
-    price: 3,
+    price: 22,
     unit: ''
   },
   {
@@ -50,7 +50,7 @@ let goods = [
     description: '金枪鱼与奶油蛋黄酱的混合，创造出世上最妙不可言的滋味。SUBWAY®赛百味金枪鱼三明治可自选新鲜蔬菜、调味品以及每日烘焙的各式面包。',
     image: '106',
     sold: 1030,
-    price: 2,
+    price: 25,
     unit: ''
   },
   {
@@ -86,7 +86,7 @@ let goods = [
     description: '柔嫩的精选鸡胸肉，烟熏的香烤牛肉，美味的火腿切片，每日烘焙的面包，配以自选的清脆蔬菜和调味品，真正的百味融合，舍我其谁！',
     image: '110',
     sold: 1030,
-    price: 2,
+    price: 25,
     unit: ''
   },
   {
@@ -95,7 +95,7 @@ let goods = [
     description: '鲜嫩味美的火腿配上SUBWAY®赛百味餐厅特有的蜜汁芥末酱，搭配您自选最爱的蔬菜，美味难以阻挡',
     image: '111',
     sold: 1030,
-    price: 2,
+    price: 18,
     unit: ''
   },
   {
@@ -104,7 +104,7 @@ let goods = [
     description: '柔嫩火鸡胸切片，配以自选的新鲜蔬菜和酱料，风味独特。搭配墨西哥辣椒，酸辣美味挡不住。',
     image: '112',
     sold: 1030,
-    price: 2,
+    price: 20,
     unit: ''
   },
   {
@@ -113,7 +113,7 @@ let goods = [
     description: '每日下单，现烤甜饼',
     image: '401',
     sold: 1030,
-    price: 2,
+    price: 4,
     unit: '个'
   },
   {
@@ -122,7 +122,7 @@ let goods = [
     description: '每日下单，现烤甜饼',
     image: '402',
     sold: 1030,
-    price: 2,
+    price: 4,
     unit: '个'
   },
   {
@@ -131,7 +131,7 @@ let goods = [
     description: '每日下单，现烤甜饼。0克反式脂肪酸。',
     image: '403',
     sold: 1030,
-    price: 2,
+    price: 4,
     unit: '个'
   },
   {
@@ -140,7 +140,7 @@ let goods = [
     description: '百事可乐',
     image: '501',
     sold: 1030,
-    price: 2,
+    price: 6,
     unit: '听'
   },
   {
@@ -149,21 +149,21 @@ let goods = [
     description: '都乐果汁苹果',
     image: '502',
     sold: 1030,
-    price: 2,
+    price: 8,
     unit: '瓶'
   },
   {
     id: '503',
-    name: '都乐果汁葡萄（瓶）',
-    description: '都乐果汁葡萄（瓶）',
+    name: '都乐果汁葡萄',
+    description: '都乐果汁葡萄',
     image: '503',
     sold: 1030,
-    price: 2,
+    price: 8,
     unit: '瓶'
   },
 ];
 
-let goodsList = [
+const categories = [
   {
     id: 'hot',
     classifyName: '热销',
@@ -216,6 +216,72 @@ let goodsList = [
   }
 ];
 
+const cartList = [
+  {
+    id: '101',
+    count: 2,
+  },
+  {
+    id: '401',
+    count: 1,
+  },
+  {
+    id: '402',
+    count: 1,
+  },
+  {
+    id: '502',
+    count: 2,
+  }];
+
+const discounts = [
+  {
+    id: '111',
+    description: '菜品价格促销',
+    restaurant_id: '',
+    creat_date: '',
+    begin_date: '',
+    end_date: '',
+    type: 'CU_XIAO',
+    order_change: [],
+    items: [
+      {"item_id": "401", "sale_price": 2},
+      {"item_id": "106", "sale_price": 15},
+      {"item_id": "101", "sale_price": 18}
+      ],
+    is_against: '222'
+  },
+  {
+    id: '222',
+    description: '满减活动',
+    restaurant_id: '',
+    creat_date: '',
+    begin_date: '',
+    end_date: '',
+    type: 'MAN_JIAN',
+    order_change: [
+      {condition: 50, discount: 5},
+      {condition: 80, discount: 10}
+    ],
+    items: [],
+    is_against: '333'
+  },
+  {
+    id: '333',
+    description: '满折活动',
+    restaurant_id: '',
+    creat_date: '',
+    begin_date: '',
+    end_date: '',
+    type: 'MAN_ZHE',
+    order_change: [
+      {condition: 30, discount: 0.9},
+      {condition: 60, discount: 0.8}
+    ],
+    items: [],
+    is_against: '222'
+  },
+];
 /*获取门店信息*/
 /*获取产品详情*/
 /*获取品类详情*/
@@ -226,5 +292,7 @@ let goodsList = [
 
 module.exports = {
   goods,
-  goodsList
+  categories,
+  cartList,
+  discounts
 };

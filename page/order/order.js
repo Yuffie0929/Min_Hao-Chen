@@ -8,19 +8,7 @@ Page({
     goods: {},
     goodsList: [],
 
-    cartList: [{
-      id: '101',
-      count: 2,
-    }, {
-      id: '401',
-      count: 1,
-    }, {
-      id: '402',
-      count: 1,
-    }, {
-      id: '502',
-      count: 2,
-    }],
+    cartList: [],
     cartCount: 0,
     cartTotal: 0,
     listShow: false, //true为展开状态 false为关闭状态
@@ -31,24 +19,29 @@ Page({
       desc: '专注味觉100年'
     }
   },
-
   onLoad: function (options) {
-    let goods = {};
+    let goods = {}, cartTotal = 0, cartCount = 0;
     data.goods.map((good)=>{
       good.pic = '../../imgs/web/' + good.image + '.jpg';
       delete good.image;
       goods[good.id] = good;
     });
+    let cartList = data.cartList.map((item)=>{
+      item.total = util.accMul(goods[item.id].price, item.count);
+      cartCount = util.accAdd(cartCount, item.count);
+      cartTotal = util.accAdd(cartTotal, item.total);
+      return item;
+    });
     this.setData({
       goodsList: data.goodsList,
-      goods: goods
+      goods,
+      cartList,
+      cartCount,
+      cartTotal
     });
-    console.log(this.data.goods)
   },
   onShow: function () {
-    this.setData({
-      classifySeleted: this.data.goodsList[0].id
-    });
+
   },
   toggleList(){
     this.setData({
