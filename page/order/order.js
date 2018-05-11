@@ -14,7 +14,7 @@ Page({
     listShow: false, //true为展开状态 false为关闭状态
 
     shop: {
-      logo: '../../imgs/web/logo.jpg',
+      logo: '../../images/web/logo.jpg',
       name: '赛百味(复兴门百盛店)',
       desc: '专注味觉100年'
     }
@@ -22,7 +22,7 @@ Page({
   onLoad: function (options) {
     let goods = {}, cartTotal = 0, cartCount = 0;
     data.goods.map((good)=>{
-      good.pic = '../../imgs/web/' + good.image + '.jpg';
+      good.pic = '../../images/web/' + good.image + '.jpg';
       delete good.image;
       goods[good.id] = good;
     });

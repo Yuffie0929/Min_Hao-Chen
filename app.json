@@ -1,6 +1,7 @@
 {
 	"debug": true,
 	"pages": [
+		"page/loading/loading",
 		"page/shop/shop",
 		"page/order/order"
 	],

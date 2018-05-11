@@ -1,14 +1,3 @@
-const formatTime = date => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
-
-  return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
-}
-
 /*yyyy-MM-dd hh:mm:ss.S*/
 const formatTimeByTpl = (date, fmt) => {
   let o = {
@@ -27,7 +16,16 @@ const formatTimeByTpl = (date, fmt) => {
     if (new RegExp("(" + k + ")").test(fmt))
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
-}
+};
+
+const formatMoney = n => {
+  return Number(n.toFixed(2));
+};
+
+const formatNumber = n => {
+  n = n.toString();
+  return n[1] ? n : '0' + n
+};
 
 /**
  * 加法
@@ -65,7 +63,7 @@ const accAdd = (arg1, arg2) => {
     arg2 = Number(arg2.toString().replace(".", ""));
   }
   return (arg1 + arg2) / m
-}
+};
 /**
  * 减法
  * @param arg1
@@ -89,7 +87,7 @@ const accSub = (arg1, arg2) => {
   //动态控制精度长度
   n = (r1 >= r2) ? r1 : r2;
   return ((arg1 * m - arg2 * m) / m).toFixed(n);
-}
+};
 /**
  * 乘法
  * @param arg1
@@ -107,7 +105,7 @@ const accMul = (arg1, arg2) => {
   } catch (e) {
   }
   return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
-}
+};
 /**
  * 除法
  * @param arg1
@@ -127,17 +125,12 @@ const accDiv = (arg1, arg2) => {
   r1 = Number(arg1.toString().replace(".", ""))
   r2 = Number(arg2.toString().replace(".", ""))
   return (r1 / r2) * Math.pow(10, t2 - t1);
-}
-
-
-const formatNumber = n => {
-  n = n.toString()
-  return n[1] ? n : '0' + n
-}
+};
 
 module.exports = {
-  formatTime,
   formatTimeByTpl,
+  formatMoney,
+  formatNumber,
   accAdd,
   accSub,
   accMul,

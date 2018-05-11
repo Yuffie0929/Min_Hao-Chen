@@ -1,6 +1,6 @@
 const App = getApp();
 const Util = require('../util.js');
-const Servser = App.globalData.servser_address;
+const Servser = 'http://localhost:8889';
 
 export function GET(requestHandler) {
   wx.request({

@@ -1,11 +1,11 @@
 <view class="container">
 	<!--餐品详情 start-->
-	<dialog id='dialog'
+	<item-info id='item_info'
 					num="{{cart.list[goodId] || 0}}"
 					good="{{goods[goodId]}}"
 					bind:minusEvent="_minusEvent"
 					bind:addEvent="_addEvent">
-	</dialog>
+	</item-info>
 	<!--餐品详情 end-->
 
 	<!--门店信息 start-->
@@ -38,36 +38,31 @@
 						<view class="name ellipsis">{{goods[id].name}}</view>
 						<view class="desc ellipsis">{{goods[id].description}}</view>
 						<view class="sold">月售{{goods[id].sold}}</view>
-
-
-
+						<!--单价 start-->
 						<view>
-							<block wx:if="{{!discounts.CU_XIAO.items[id]}}">
+							<block wx:if="{{!goods[id].sale_price}}">
 								<text class="price">¥{{goods[id].price}}</text>
 								<text class="unit" wx:if="{{goods[id].unit}}">/{{goods[id].unit}}</text>
 							</block>
 							<block wx:else>
-								<text class="price">¥{{discounts.CU_XIAO.items[id].sale_price}}</text>
+								<text class="price">¥{{goods[id].sale_price}}</text>
 								<text class="unit">
 									<text style="text-decoration:line-through;">¥{{goods[id].price}}</text>
 									<text wx:if="{{goods[id].unit}}">/{{goods[id].unit}}</text>
 								</text>
 							</block>
 						</view>
-
-
-
-
-
-
+						<!--单价 end-->
+						<!--加减数量 start-->
 						<view class="delCart" catchtap="tapMinusCart" data-id="{{id}}"
-									wx:if="{{cart.list[goods[id].id] > 0}}">
-							<image src="/imgs/shop/minus.png"></image>
+									wx:if="{{cart.list[id].count > 0}}">
+							<image src="/images/shop/minus.png"></image>
 						</view>
-						<view class="num" wx:if="{{cart.list[goods[id].id] !== 0}}">{{cart.list[goods[id].id]}}</view>
+						<view class="num" wx:if="{{cart.list[id]}}">{{cart.list[id].count}}</view>
 						<view class="addCart" catchtap="tapAddCart" data-id="{{id}}">
-							<image src="/imgs/shop/plus.png"></image>
+							<image src="/images/shop/plus.png"></image>
 						</view>
+						<!--加减数量 end-->
 					</view>
 				</view>
 			</view>
@@ -79,11 +74,11 @@
 	<view class="cart-detail" hidden="{{!showCartDetail||!cart.count}}">
 		<view class="mask" bindtap="hideCartDetail"></view>
 		<view class="list">
-			<view class="item" wx:for="{{cart.list}}" wx:for-index="id" wx:for-item="num" wx:key="id">
+			<view class="item" wx:for="{{cart.list}}" wx:for-index="id" wx:key="id">
 				<view class="name ellipsis">{{goods[id].name}}</view>
-				<view class="total">￥{{goods[id].price*cart.list[id]}}</view>
-				<view class="reduce" data-id="{{id}}" bindtap="tapReduceCart">-</view>
-				<view class="num">{{num}}</view>
+				<view class="total">￥{{item.total}}</view>
+				<view class="reduce" data-id="{{id}}" bindtap="tapMinusCart">-</view>
+				<view class="num">{{item.count}}</view>
 				<view class="add" data-id="{{id}}" bindtap="tapAddCart">+</view>
 			</view>
 		</view>
@@ -94,7 +89,7 @@
 	<view class="cart">
 		<view class="data" bindtap="showCartDetail">
 			<view class="icon">
-				<image src="/imgs/shop/cart.png"></image>
+				<image src="/images/shop/cart.png"></image>
 				<view class="count">{{cart.count}}</view>
 			</view>
 			<view class="total">￥{{cart.total}}</view>
