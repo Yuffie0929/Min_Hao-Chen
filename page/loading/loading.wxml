@@ -1,0 +1,4 @@
+<view class="container">
+	<image class="loading-image" src="/images/loading/loading.png"></image>
+	<view class="loading-text">L O A D I N G</view>
+</view>

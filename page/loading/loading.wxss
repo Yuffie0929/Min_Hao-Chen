@@ -1,0 +1,20 @@
+
+page {
+	height: 100%;
+	overflow: hidden;
+}
+.container {
+	height: 100%;
+	overflow: hidden;
+	background-color: #FDF2CF;
+}
+.loading-image{
+	margin-top: 30%;
+	width: 100%;
+}
+.loading-text{
+	font-size: 50rpx;
+	font-weight: bold;
+	color: #e38722;
+	text-align: center;
+}
