@@ -275,8 +275,8 @@ const discounts = [
     end_date: '',
     type: 'MAN_ZHE',
     order_change: [
-      {condition: 30, discount: 0.9},
-      {condition: 60, discount: 0.8}
+      {condition: 30, discount: 9}, //折扣用下拉框选 1 1.5 2 2.5 3...
+      {condition: 60, discount: 8}
     ],
     items: [],
     is_against: '222'

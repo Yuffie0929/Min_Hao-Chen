@@ -1,46 +1,44 @@
-const app = getApp();
-const server = require('../../utils/server');
-const data = require('../../utils/data');
-const util = require('../../utils/util');
+const App = getApp();
+const Data = require('../../utils/data/data');
+const Util = require('../../utils/util');
 
 Page({
   data: {
+    shop: {},
     goods: {},
-    goodsList: [],
+    discounts: {},
 
     cartList: [],
     cartCount: 0,
     cartTotal: 0,
+    cartSaleTotal: 0,
     listShow: false, //true为展开状态 false为关闭状态
-
-    shop: {
-      logo: '../../images/web/logo.jpg',
-      name: '赛百味(复兴门百盛店)',
-      desc: '专注味觉100年'
-    }
   },
-  onLoad: function (options) {
-    let goods = {}, cartTotal = 0, cartCount = 0;
-    data.goods.map((good)=>{
-      good.pic = '../../images/web/' + good.image + '.jpg';
-      delete good.image;
-      goods[good.id] = good;
+  onLoad(options){
+    let that = this;
+    this.getDatas(()=>{
+      that.countDiscounts();
     });
-    let cartList = data.cartList.map((item)=>{
-      item.total = util.accMul(goods[item.id].price, item.count);
-      cartCount = util.accAdd(cartCount, item.count);
-      cartTotal = util.accAdd(cartTotal, item.total);
-      return item;
+  },
+  getDatas(cb){
+    let cart = wx.getStorageSync('__cart_list');
+    let cartList = cart.list;
+    cartList = Object.keys(cartList).map((id)=>{
+      cartList[id].id = id;
+      return cartList[id];
     });
     this.setData({
-      goodsList: data.goodsList,
-      goods,
       cartList,
-      cartCount,
-      cartTotal
+      cartCount: cart.count,
+      cartTotal: cart.total,
+      cartSaleTotal: cart.sale_total,
+      shop:  App.globalData.shop,
+      goods: App.globalData.goods,
+      discounts: App.globalData.discounts
     });
+    cb();
   },
-  onShow: function () {
+  countDiscounts(){
 
   },
   toggleList(){

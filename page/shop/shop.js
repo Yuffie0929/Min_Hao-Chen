@@ -1,39 +1,130 @@
 const App = getApp();
 const Data = require('../../utils/data/data');
 const Util = require('../../utils/util');
-const data = require('../../utils/data');
 Page({
-	data: {
+  data: {
+    animationData: {},
+    top: 0,
+
+
     shop: {},
-		goodId: '',
-		goods: {},
+    goodId: '',
+    goods: {},
     categories: [],
     discounts: {},
-		cart: {
-			count: 0,
-			total: 0,
-			list: {}
-		},
-		showCartDetail: false
-	},
+    activities: [],
+    cart: {
+      count: 0,
+      total: 0,
+      sale_total: 0,
+      list: {}
+    },
+    showCartDetail: false
+  },
   onLoad: function (options) {
-		let categories = App.globalData.categories;
-    let classifySeleted = categories.length === 0 ? '' : categories[0].id;
-    this.setData({
-      shop:  App.globalData.shop,
-      goods: App.globalData.goods,
-      categories,
-      discounts: App.globalData.discounts,
-      classifySeleted
+    let that = this;
+    this.getDatas(()=>{
+      that.initCart();
+      that.countDiscounts();
+      wx.setNavigationBarTitle({
+        title: that.data.shop.name
+      })
+      that.initAnimation();
     });
-    wx.setNavigationBarTitle({
-      title: this.data.shop.name
-    })
   },
   onReady: function () {
     this.dialog = this.selectComponent("#item_info");
   },
 
+  getDatas(cb) {
+    let categories = App.globalData.categories;
+    let classifySeleted = categories.length === 0 ? '' : categories[0].id;
+    this.setData({
+      shop: App.globalData.shop,
+      goods: App.globalData.goods,
+      categories,
+      discounts: App.globalData.discounts,
+      classifySeleted
+    });
+    cb();
+  },
+  initCart(){
+    let cart = wx.getStorageSync('__cart_list');
+    if(cart !== 'undefined' || cart){
+      this.setData({
+        cart
+      });
+      this.countCart();
+    } else {
+      cart = this.data.cart;
+      this.setData({
+        cart
+      });
+    }
+  },
+  countDiscounts() {
+    let MAN_JIAN = this.data.discounts['MAN_JIAN'];
+    let MAN_ZHE = this.data.discounts['MAN_ZHE'];
+    let activities = this.data.activities;
+    if (MAN_JIAN && MAN_JIAN.order_change.length > 0) {
+      let MAN_JIAN_TEXT = MAN_JIAN.order_change.map((active)=>{
+        let condition = active.condition;
+        let discount = active.discount;
+        return `满${condition}减${discount};`
+      });
+      activities.push({
+        color: '#C90400',
+        firstFont: '减',
+        type: 'MAN_JIAN',
+        text: MAN_JIAN_TEXT.join('')
+      });
+    }
+    if (MAN_ZHE && MAN_ZHE.order_change.length > 0) {
+      let MAN_ZHE_TEXT = MAN_ZHE.order_change.map((active)=>{
+        let condition = active.condition;
+        let discount = active.discount;
+        return `满${condition}打${discount}折;`
+      });
+      activities.push({
+        color: '#C97C00',
+        firstFont: '折',
+        type: 'MAN_ZHE',
+        text: MAN_ZHE_TEXT.join('')
+      });
+    }
+    activities.push(activities[0]);
+    this.setData({
+      activities
+    });
+  },
+  initAnimation(){
+    let animation = wx.createAnimation({
+      duration: 1000,
+      timingFunction: 'ease',
+    });
+
+    let step = 50;
+    let n = 0;
+    this.animation = animation;
+    let length = this.data.activities.length;
+
+    setInterval(function () {
+      this.animation.top(-n * step + 'rpx').step();
+      n++;
+      this.setData({
+        animationData: this.animation.export()
+      });
+      if (n === length) {
+        setTimeout(()=>{
+          n = 0;
+          this.animation.top('0rpx').step({duration: 1});
+          this.setData({
+            animationData: this.animation.export()
+          })
+        }, 1500)
+      }
+    }.bind(this), 3000);
+  },
   /*菜品品类*/
   tapClassify: function (e) {
     var id = e.target.dataset.id;
@@ -48,60 +139,66 @@ Page({
     }, 100);
   },
   /*餐品详情*/
-  _showDialog(e){
+  _showDialog(e) {
     this.setData({
       goodId: e.currentTarget.dataset.id
     });
     this.dialog.showDialog();
   },
-  _minusEvent(){
+  _minusEvent() {
     /*减法*/
     this.addCart(this.data.goodId, -1);
   },
-  _addEvent(){
+  _addEvent() {
     /*加法*/
     this.addCart(this.data.goodId, 1);
   },
-	/*购物车操作*/
-	tapAddCart: function (e) {
-		this.addCart(e.target.dataset.id, 1);
-	},
-	tapMinusCart(e){
+  /*购物车操作*/
+  tapAddCart: function (e) {
+    this.addCart(e.target.dataset.id, 1);
+  },
+  tapMinusCart(e) {
     this.addCart(e.target.dataset.id, -1);
-	},
-	addCart: function (id, n) {
-		let cartList = this.data.cart.list;
-		let goods = this.data.goods;
-		let count = cartList[id] ? cartList[id].count : 0;
-		if(count === 0 && n < 0){
-			return;
-		}
-		count = count + n;
-		if(count){
-			let price = goods[id]['sale_price'] || goods[id]['price'];
+  },
+  addCart: function (id, n) {
+    let cartList = this.data.cart.list;
+    let goods = this.data.goods;
+    let count = cartList[id] ? cartList[id].count : 0;
+    if (count === 0 && n < 0) {
+      return;
+    }
+    count = count + n;
+    if (count) {
+      let price = goods[id]['price'];
+      let sale_price = goods[id]['sale_price'] || goods[id]['price'];
       let total = Util.accMul(count, price);
+      let sale_total = Util.accMul(count, sale_price);
       total = Util.formatMoney(total);
+      sale_total = Util.formatMoney(sale_total);
       cartList[id] = {
-      	total,
+        sale_total,
+        total,
         count
-			};
-		} else {
-			delete cartList[id]
-		}
-		this.countCart();
-	},
-	countCart: function () {
-    let count = 0, total = 0;
-		for (let id in this.data.cart.list) {
-			count += this.data.cart.list[id].count;
-			total += this.data.cart.list[id].total;
-		}
-		this.data.cart.count = count;
-		this.data.cart.total = total;
-		this.setData({
-			cart: this.data.cart
-		});
-	},
+      };
+    } else {
+      delete cartList[id]
+    }
+    this.countCart();
+  },
+  countCart: function () {
+    let count = 0, total = 0, sale_total = 0;
+    for (let id in this.data.cart.list) {
+      count += this.data.cart.list[id].count;
+      total += this.data.cart.list[id].total;
+      sale_total += this.data.cart.list[id].sale_total;
+    }
+    this.data.cart.count = count;
+    this.data.cart.total = total;
+    this.data.cart.sale_total = sale_total;
+    this.setData({
+      cart: this.data.cart
+    });
+  },
   showCartDetail: function () {
     this.setData({
       showCartDetail: !this.data.showCartDetail
@@ -112,60 +209,17 @@ Page({
       showCartDetail: false
     });
   },
-	/*下单*/
-	submit: function (e) {
-		let cartList = [];
-		let goodsObj = this.data.goods;
-		let cartObj = this.data.cart.list;
-    Object.keys(cartObj).forEach((key)=>{
-    	if(cartObj[key]){
-        goodsObj[key]['count'] = cartObj[key];
-        cartList.push(goodsObj[key]);
-			}
-    });
-    console.log(cartList);
-    wx.setStorageSync('__goods_list', cartList);
-    let that = this;
-    wx.navigateTo({
-      url: '../order/order',
-			params: {
-
-			},
-      fail:function(e){
-        wx.showToast({
-          title: e.errMsg,
-          icon: "none",
-          duration: 2000,
-          success: function () {
-            setTimeout(function () {
-              that.data.go = true;
-            }, 2000)
-          }
-        })
-      },
+  /*下单*/
+  submit: function (e) {
+    let cart = this.data.cart
+    wx.setStorageSync('__cart_list', cart);
+    Util.navigateTo({
+      url: '../order/order'
     })
-
-		/*server.sendTemplate(e.detail.formId, null, function (res) {
-			if (res.data.errorcode == 0) {
-				wx.showModal({
-					showCancel: false,
-					title: '恭喜',
-					content: '订单发送成功！下订单过程顺利完成，本例不再进行后续订单相关的功能。',
-					success: function(res) {
-						if (res.confirm) {
-							wx.navigateBack();
-						}
-					}
-				})
-			}
-		}, function (res) {
-			console.log(res)
-		});*/
-
-	},
+  },
 
 
-	/*功能*/
+  /*功能*/
   onGoodsScroll: function (e) {
     if (e.detail.scrollTop > 10 && !this.data.scrollDown) {
       this.setData({

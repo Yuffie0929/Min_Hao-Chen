@@ -14,6 +14,17 @@
 		<view class="info">
 			<view class="welcome ellipsis">公告：欢迎光临{{shop.name}}！</view>
 			<view class="desc ellipsis">{{shop.desc}}</view>
+
+			<view class="active-wrapper">
+				<!--<view class="active-arrow"></view>-->
+				<view style="position: absolute;top: 0" animation="{{animationData}}">
+					<view class="active-item" wx:for="{{activities}}" wx:key="*this">
+						<text class="active-icon" style="background-color:{{item.color}}">{{item.firstFont}}</text>
+						<text>{{item.text}}</text>
+					</view>
+				</view>
+			</view>
+
 		</view>
 	</view>
 	<!--门店信息 end-->
@@ -76,7 +87,7 @@
 		<view class="list">
 			<view class="item" wx:for="{{cart.list}}" wx:for-index="id" wx:key="id">
 				<view class="name ellipsis">{{goods[id].name}}</view>
-				<view class="total">￥{{item.total}}</view>
+				<view class="total">￥{{item.sale_total}}</view>
 				<view class="reduce" data-id="{{id}}" bindtap="tapMinusCart">-</view>
 				<view class="num">{{item.count}}</view>
 				<view class="add" data-id="{{id}}" bindtap="tapAddCart">+</view>
@@ -92,7 +103,7 @@
 				<image src="/images/shop/cart.png"></image>
 				<view class="count">{{cart.count}}</view>
 			</view>
-			<view class="total">￥{{cart.total}}</view>
+			<view class="total">￥{{cart.sale_total}}</view>
 		</view>
 		<form bindsubmit="submit" report-submit="true">
 			<!--<button type="primary" bindtap="_showDialog"> ClickMe! </button>-->

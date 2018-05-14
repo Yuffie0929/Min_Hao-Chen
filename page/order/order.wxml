@@ -6,25 +6,26 @@
 			<text>{{shop.name}}</text>
 		</view>
 		<view class="order-list">
-			<view class="order-list-item" wx:for="{{cartList}}" wx:key="item.id" wx:if="{{listShow || index < 3}}">
+			<view class="order-list-item" wx:for="{{cartList}}" wx:key="{{item.id}}"
+						wx:if="{{listShow || index < 3}}">
 				<image src="{{goods[item.id].pic}}"></image>
 				<view class="item-center">
-					<view class="name ellipsis">{{goods[item.id].name}}</view>
-					<view class="unit">{{goods[item.id].unit}}</view>
+					<view class="name ellipsis">{{goods[[item.id]].name}}</view>
+					<view class="unit">{{goods[[item.id]].unit}}</view>
 					<view class="count">X{{item.count}}</view>
 				</view>
-				<view class="item-price">¥{{item.total}}</view>
+				<view class="item-price">¥{{item.sale_total}}</view>
 			</view>
 		</view>
-		<view class="toggle-list {{listShow ?  'show' : 'hide'}}" bindtap="toggleList">{{ listShow ?  '点击收起' : '点击展开' }}</view>
+		<view wx:if="{{cartList.length > 3}}" class="toggle-list {{listShow ?  'show' : 'hide'}}" bindtap="toggleList">{{ listShow ?  '点击收起' : '点击展开' }}</view>
 	</view>
 	<!--订单信息 end-->
 
 	<!--下单 start-->
 	<view class="order-footer">
 		<view class="price" bindtap="showCartDetail">
-			<view class="count">已优惠 ¥15.1</view>
-			<view class="total"><text>合计</text> ¥{{cartTotal}}</view>
+			<view class="count">已优惠 ¥{{cartTotal - cartSaleTotal}}</view>
+			<view class="total"><text>合计</text> ¥{{cartSaleTotal}}</view>
 		</view>
 		<view class="submit" bindsubmit="submit">提交订单</view>
 	</view>

@@ -1,3 +1,5 @@
+const App = getApp();
+
 /*yyyy-MM-dd hh:mm:ss.S*/
 const formatTimeByTpl = (date, fmt) => {
   let o = {
@@ -127,6 +129,30 @@ const accDiv = (arg1, arg2) => {
   return (r1 / r2) * Math.pow(10, t2 - t1);
 };
 
+const urlEncode = (path, param) => {
+  let i, url = '';
+  for (i in param) url += '&' + i + '=' + param[i];
+  return path + url.replace(/./, '?');
+};
+
+const navigateTo = (config) => {
+  if(!App.globalData.tapFlag) return;
+  App.globalData.tapFlag = false;
+  config.url = urlEncode(config.url, config.params);
+  config.complete = (()=>{
+    App.globalData.tapFlag = true;
+  });
+  config.fail = config.fail || ((e) => {
+    wx.showToast({
+      title: e.errMsg,
+      icon: "none",
+      duration: 2000
+    })
+  });
+  wx[config.type || 'navigateTo'](config);
+
+};
+
 module.exports = {
   formatTimeByTpl,
   formatMoney,
@@ -134,5 +160,6 @@ module.exports = {
   accAdd,
   accSub,
   accMul,
-  accDiv
+  accDiv,
+  navigateTo
 }
