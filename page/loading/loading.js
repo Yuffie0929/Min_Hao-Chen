@@ -7,14 +7,19 @@ Page({
   onLoad: function (options) {
     let that = this;
     Promise.all([this.reqGoods(), this.reqCategories(), this.reqDiscount()]).then(function (res) {
+
       let goods = res[0];
+      let categories = res[1];
       let discounts = res[2];
       if(discounts['CU_XIAO']){
         Object.keys(discounts['CU_XIAO'].items).forEach((id)=>{
-          goods[id].sale_price = discounts['CU_XIAO'].items[id].sale_price;
+          if (goods[id]) {
+            goods[id].price = discounts['CU_XIAO'].items[id].sale_price;
+          }
         });
       }
-      app.globalData.categories = res[1];
+      
+      app.globalData.categories = categories;
       app.globalData.goods = goods;
       app.globalData.discounts = discounts;
       wx.redirectTo({
@@ -90,7 +95,7 @@ Page({
   formatGoodsData(goods){
     let obj = {};
     goods.map((good)=>{
-      good.pic = '../../images/web/' + good.image + '.jpg';
+      good.pic = '../../images/web' + good.image + '.jpg';
       delete good.image;
       obj[good.id] = good;
     });

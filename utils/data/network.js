@@ -1,6 +1,6 @@
 const App = getApp();
 const Util = require('../util.js');
-const Servser = 'http://localhost:8889';
+const Servser = 'http://13.209.5.115:8080';
 
 export function GET(requestHandler) {
   wx.request({
@@ -42,11 +42,12 @@ export function POST(requestHandler){
     method: 'POST',
     /*请求成功*/
     success: function(res){
+      console.log(JSON.stringify(requestHandler) + JSON.stringify(res));
       if(requestHandler.success){
         requestHandler.success(res.data);
         return;
       }
-      if(res.data.code === 0){
+      if(res.data.code == 200){
         /*返回code0*/
         requestHandler.success_0 && requestHandler.success_0(res.data.data);
       } else {
@@ -60,7 +61,7 @@ export function POST(requestHandler){
           return;
         }
         if(typeof requestHandler.success_1 === 'undefined' && res.data.msg){
-          Util.alert(res.data.msg);
+          Util.alert('未知错误');
         }
       }
     },

@@ -245,9 +245,9 @@ const discounts = [
     type: 'CU_XIAO',
     order_change: [],
     items: [
-      {"item_id": "401", "sale_price": 2},
-      {"item_id": "106", "sale_price": 15},
-      {"item_id": "101", "sale_price": 18}
+      {"item_id": "1", "sale_price": 2},
+      {"item_id": "11", "sale_price": 15},
+      {"item_id": "1111", "sale_price": 18}
       ],
     is_against: '222'
   },
