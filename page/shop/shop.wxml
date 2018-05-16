@@ -1,7 +1,7 @@
 <view class="container">
 	<!--餐品详情 start-->
 	<item-info id='item_info'
-					num="{{cart.list[goodId] || 0}}"
+					num="{{cart.items[goodId] || 0}}"
 					good="{{goods[goodId]}}"
 					bind:minusEvent="_minusEvent"
 					bind:addEvent="_addEvent">
@@ -32,7 +32,7 @@
 	<!--点餐 start-->
 	<view class="content-container">
 		<scroll-view class="classify-container" scroll-y="true">
-			<view class="classify {{categorySeleted==category.categoryName?'active':''}}"
+			<view class="classify {{categorySelected==category.categoryName?'active':''}}"
 						wx:for="{{categories}}" wx:for-item="category" wx:key="id"
 						data-id="{{category.categoryName}}" bindtap="didClickCategory">
 				<view class="name">{{category.categoryName}}</view>
@@ -43,22 +43,22 @@
 			<view wx:for="{{categories}}" wx:for-index="id" wx:for-item="category" wx:key="id" id="{{category.categoryName}}">
 				<view class="title">{{category.categoryName}}</view>
 				<view class="goods" wx:for="{{goods}}" wx:for-index="itemId" wx:for-item="item" wx:key="id"
-							bindtap="didClickItem" data-id="{{item.id}}" wx:if="{{item.category == category.id}}">
-					<image class="good-pic" src="{{item.pic}}"></image>
+							bindtap="didClickItem" data-id="{{item.id}}" wx:if="{{item.category == category.id}}" id="{{item.name}}">
+					<!-- <image class="good-pic" src="{{item.pic}}"></image> -->
 					<view class="good-info">
 						<view class="name ellipsis">{{item.name}}</view>
 						<view class="desc ellipsis">{{item.description}}</view>
 						<view class="sold">月售{{item.sold}}</view>
 						<!--单价 start-->
 						<view>
-							<block wx:if="{{!item.org}}">
+							<block wx:if="{{item.origPrice == item.price}}">
 								<text class="price">¥{{item.price}}</text>
 								<text class="unit" wx:if="{{item.unit}}">/{{item.unit}}</text>
 							</block>
 							<block wx:else>
-								<text class="price">¥{{item.sale_price}}</text>
+								<text class="price">¥{{item.price}}</text>
 								<text class="unit">
-									<text style="text-decoration:line-through;">¥{{item.price}}</text>
+									<text style="text-decoration:line-through;">¥{{item.origPrice}}</text>
 									<text wx:if="{{item.unit}}">/{{item.unit}}</text>
 								</text>
 							</block>
@@ -66,10 +66,10 @@
 						<!--单价 end-->
 						<!--加减数量 start-->
 						<view class="delCart" catchtap="tapMinusCart" data-id="{{itemId}}"
-									wx:if="{{cart.list[itemId].count > 0}}">
+									wx:if="{{cart.items[itemId] > 0}}">
 							<image src="/images/shop/minus.png"></image>
 						</view>
-						<view class="num" wx:if="{{cart.list[itemId]}}">{{cart.list[itemId].count}}</view>
+						<view class="num" wx:if="{{cart.items[itemId]}}">{{cart.items[itemId]}}</view>
 						<view class="addCart" catchtap="tapAddCart" data-id="{{itemId}}">
 							<image src="/images/shop/plus.png"></image>
 						</view>
@@ -85,11 +85,11 @@
 	<view class="cart-detail" hidden="{{!showCartDetail||!cart.count}}">
 		<view class="mask" bindtap="hideCartDetail"></view>
 		<view class="list">
-			<view class="item" wx:for="{{cart.list}}" wx:for-index="id">
+			<view class="item" wx:for="{{cart.items}}" wx:for-index="id" wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
 				<view class="name ellipsis">{{goods[id].name}}</view>
-				<view class="total">￥{{item.sale_total}}</view>
+				<view class="total">￥{{goods[id].price * item}}</view>
 				<view class="reduce" data-id="{{id}}" bindtap="tapMinusCart">-</view>
-				<view class="num">{{item.count}}</view>
+				<view class="num">{{item}}</view>
 				<view class="add" data-id="{{id}}" bindtap="tapAddCart">+</view>
 			</view>
 		</view>
@@ -103,7 +103,7 @@
 				<image src="/images/shop/cart.png"></image>
 				<view class="count">{{cart.count}}</view>
 			</view>
-			<view class="total">￥{{cart.sale_total}}</view>
+			<view class="total">￥{{cart.total}}</view>
 		</view>
 		<form bindsubmit="submit" report-submit="true">
 			<!--<button type="primary" bindtap="_showDialog"> ClickMe! </button>-->
