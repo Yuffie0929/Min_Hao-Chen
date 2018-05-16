@@ -34,23 +34,24 @@ Page({
   },
   onReady: function () {
     this.dialog = this.selectComponent("#item_info");
+    console.log(JSON.stringify(Object.values(this.data.goods)));
   },
 
   getDatas(cb) {
     let categories = App.globalData.categories;
-    let classifySeleted = categories.length === 0 ? '' : categories[0].id;
+    let categorySeleted = categories.length === 0 ? '' : categories[0].id;
     this.setData({
       shop: App.globalData.shop,
       goods: App.globalData.goods,
       categories,
       discounts: App.globalData.discounts,
-      classifySeleted
+      categorySeleted
     });
     cb();
   },
   initCart(){
     let cart = wx.getStorageSync('__cart_list');
-    if(cart !== 'undefined' || cart){
+    if(cart !== 'undefined' && cart){
       this.setData({
         cart
       });
@@ -73,6 +74,7 @@ Page({
         return `满${condition}减${discount};`
       });
       activities.push({
+        id: 131,
         color: '#C90400',
         firstFont: '减',
         type: 'MAN_JIAN',
@@ -86,13 +88,13 @@ Page({
         return `满${condition}打${discount}折;`
       });
       activities.push({
+        id: 141,
         color: '#C97C00',
         firstFont: '折',
         type: 'MAN_ZHE',
         text: MAN_ZHE_TEXT.join('')
       });
     }
-    activities.push(activities[0]);
     this.setData({
       activities
     });
@@ -117,7 +119,7 @@ Page({
       if (n === length) {
         setTimeout(()=>{
           n = 0;
-          this.animation.top('0rpx').step({duration: 1});
+          this.animation.top('0rpx').step();
           this.setData({
             animationData: this.animation.export()
           })
@@ -126,20 +128,20 @@ Page({
     }.bind(this), 3000);
   },
   /*菜品品类*/
-  tapClassify: function (e) {
+  didClickCategory: function (e) {
     var id = e.target.dataset.id;
     this.setData({
-      classifyViewed: id
+      categoryViewed: id
     });
     var self = this;
     setTimeout(function () {
       self.setData({
-        classifySeleted: id
+        categorySeleted: id
       });
     }, 100);
   },
   /*餐品详情*/
-  _showDialog(e) {
+  didClickItem(e) {
     this.setData({
       goodId: e.currentTarget.dataset.id
     });
@@ -155,6 +157,7 @@ Page({
   },
   /*购物车操作*/
   tapAddCart: function (e) {
+    console.log(e);
     this.addCart(e.target.dataset.id, 1);
   },
   tapMinusCart(e) {

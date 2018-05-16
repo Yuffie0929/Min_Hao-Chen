@@ -153,6 +153,15 @@ const navigateTo = (config) => {
 
 };
 
+const alert = (title) => {
+  wx.showToast(
+    {
+      title:title,
+      icon: "none",
+    }
+  )
+};
+
 module.exports = {
   formatTimeByTpl,
   formatMoney,
@@ -161,5 +170,6 @@ module.exports = {
   accSub,
   accMul,
   accDiv,
-  navigateTo
+  navigateTo,
+  alert
 }
