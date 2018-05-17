@@ -15,7 +15,8 @@ Page({
     showCartDetail: false,
     isSync: false,
     cacheSync: {},
-    categorySelected: ''
+    categorySelected: '',
+    categorySelectedStyle: ''
   },
   onLoad: function (options) {
     let that = this;
@@ -27,6 +28,7 @@ Page({
       })
       that.initAnimation();
     });
+    this.categorySelectedFlag = true;
   },
   onReady: function () {
     this.dialog = this.selectComponent("#item_info");
@@ -35,12 +37,14 @@ Page({
   getDatas(cb) {
     let categories = App.globalData.categories;
     let categorySelected = categories.length === 0 ? '' : 'id' + categories[0].id;
+    let categorySelectedStyle = categories.length === 0 ? '' : 'id' + categories[0].id;
     this.setData({
       shop: App.globalData.shop,
       goods: App.globalData.goods,
       discounts: App.globalData.discounts,
       categories,
-      categorySelected
+      categorySelected,
+      categorySelectedStyle
     });
 
     cb();
@@ -135,14 +139,14 @@ Page({
   didClickCategory: function (e) {
     let id = e.target.dataset.id;
     this.setData({
-      categorySelected: id
+      categorySelected: id,
+      categorySelectedStyle: id,
     });
-    let self = this;
-    setTimeout(function () {
-      self.setData({
-        categorySelected: id
-      });
-    }, 100);
+    this.categorySelectedFlag = false;
+    let that = this;
+    setTimeout(()=>{
+      that.categorySelectedFlag = true;
+    }, 100)
   },
   /*餐品详情*/
   didClickItem(e) {
@@ -236,20 +240,21 @@ Page({
         scrollDown: false
       });
     }
-    /*let scale = e.detail.scrollWidth / 570,
+    if(!this.categorySelectedFlag)return;
+    let scale = e.detail.scrollWidth / 570,
       scrollTop = e.detail.scrollTop / scale,
       h = 0,
-      categorySelected;
+      categorySelectedStyle;
     this.data.categories.forEach(function (category, i) {
       let _h = 70 + category.goods.length * (46 * 3 + 20 * 2);
       if (scrollTop >= h - 100 / scale) {
-        categorySelected = 'id' + category.id;
+        categorySelectedStyle = 'id' + category.id;
       }
       h += _h;
     });
     this.setData({
-      categorySelected: categorySelected
-    });*/
+      categorySelectedStyle: categorySelectedStyle
+    });
   },
   errImage: function(e){
     let id = e.currentTarget.dataset.id;

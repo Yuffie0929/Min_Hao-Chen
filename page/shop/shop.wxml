@@ -32,7 +32,7 @@
 	<!--点餐 start-->
 	<view class="content-container">
 		<scroll-view class="classify-container" scroll-y="true">
-			<view class="classify {{categorySelected == ('id' + category.id) ? 'active':''}}"
+			<view class="classify {{categorySelectedStyle == ('id' + category.id) ? 'active':''}}"
 						wx:for="{{categories}}" wx:for-item="category" wx:key="id"
 						data-id="id{{category.id}}" bindtap="didClickCategory">
 				<view class="name">{{category.categoryName}}</view>
