@@ -9,8 +9,13 @@ page {
 	padding: 15rpx;
 }
 .order-info{
+	position: absolute;
+	top: 15rpx;
+	left: 15rpx;
+	right: 15rpx;
+	bottom: 120rpx;
+	width: auto;
 	background-color: #fff;
-	width: 100%;
 	box-shadow: 0 0 10rpx 4rpx #ddd;
 	overflow: hidden;
 }
