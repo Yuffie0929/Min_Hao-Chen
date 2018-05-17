@@ -251,5 +251,13 @@ Page({
       categorySelected: categorySelected
     });*/
   },
+  errImage: function(e){
+    let id = e.currentTarget.dataset.id;
+    let goods = this.data.goods;
+    goods[id].pic = '../../images/errImage.png';
+    this.setData({
+      goods
+    });
+  }
 });
 

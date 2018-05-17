@@ -11,9 +11,7 @@ Page({
     listShow: false, //true为展开状态 false为关闭状态
   },
   onLoad(options){
-    let that = this;
     this.getDatas();
-    console.log(this.data.cart.items);
   },
   getDatas(){
     this.setData({
@@ -44,6 +42,14 @@ Page({
         Util.alert("提交失败");
       }
     })
+  },
+  errImage: function(e){
+    let id = e.currentTarget.dataset.id;
+    let goods = this.data.goods;
+    goods[id].pic = '../../images/errImage.png';
+    this.setData({
+      goods
+    });
   }
 });
 

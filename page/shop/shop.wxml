@@ -45,7 +45,9 @@
 				<view class="title">{{category.categoryName}}</view>
 				<view class="goods" wx:for="{{goods}}" wx:for-index="itemId" wx:for-item="item" wx:key="id"
 							bindtap="didClickItem" data-id="{{item.id}}" wx:if="{{item.category == category.id}}">
-					<!-- <image class="good-pic" src="{{item.pic}}"></image> -->
+					<image class="good-pic" src="{{item.pic}}"
+								 data-id="{{item.id}}"
+								 binderror="errImage"></image>
 					<view class="good-info">
 						<view class="name ellipsis">{{item.name}}</view>
 						<view class="desc ellipsis">{{item.description}}</view>

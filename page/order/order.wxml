@@ -6,8 +6,11 @@
       <text>{{shop.name}}</text>
     </view>
     <view class="order-list">
-      <view class="order-list-item" wx:for="{{cart.items}}" wx:for-index="id" wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
-        <!-- <image src="{{goods[index].pic}}"></image> -->
+      <view class="order-list-item" wx:for="{{cart.items}}" wx:for-index="id"
+            wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
+        <image src="{{goods[id].pic}}"
+               data-id="{{id}}"
+               binderror="errImage"></image>
         <view class="item-center">
           <view class="name ellipsis">{{goods[id].name}}</view>
           <view class="unit">{{goods[id].unit}}</view>
@@ -17,8 +20,6 @@
       </view>
     </view>
   </scroll-view>
-
-
   <!--订单信息 end-->
 
   <!--下单 start-->
