@@ -1,10 +1,10 @@
 <view class="container">
 	<!--餐品详情 start-->
 	<item-info id='item_info'
-					num="{{cart.items[goodId] || 0}}"
-					good="{{goods[goodId]}}"
-					bind:minusEvent="_minusEvent"
-					bind:addEvent="_addEvent">
+						 num="{{cart.items[goodId] || 0}}"
+						 good="{{goods[goodId]}}"
+						 bind:minusEvent="_minusEvent"
+						 bind:addEvent="_addEvent">
 	</item-info>
 	<!--餐品详情 end-->
 
