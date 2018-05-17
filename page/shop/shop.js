@@ -5,25 +5,21 @@ Page({
   data: {
     animationData: {},
     top: 0,
-
-
     shop: {},
     goodId: '',
     goods: {},
+    cart: {},
     categories: [],
     discounts: {},
     activities: [],
-    cart: {
-      count: 0,
-      total: 0,
-      sale_total: 0,
-      list: {}
-    },
-    showCartDetail: false
+    showCartDetail: false,
+    isSync: false,
+    cacheSync: {},
+    categorySelected: ''
   },
   onLoad: function (options) {
     let that = this;
-    this.getDatas(()=>{
+    this.getDatas(() => {
       that.initCart();
       that.countDiscounts();
       wx.setNavigationBarTitle({
@@ -34,41 +30,50 @@ Page({
   },
   onReady: function () {
     this.dialog = this.selectComponent("#item_info");
-    console.log(JSON.stringify(Object.values(this.data.goods)));
   },
 
   getDatas(cb) {
     let categories = App.globalData.categories;
-    let categorySeleted = categories.length === 0 ? '' : categories[0].id;
+    let categorySelected = categories.length === 0 ? '' : categories[0].categoryName;
     this.setData({
       shop: App.globalData.shop,
       goods: App.globalData.goods,
-      categories,
       discounts: App.globalData.discounts,
-      categorySeleted
+      categories,
+      categorySelected
     });
+
     cb();
   },
-  initCart(){
-    let cart = wx.getStorageSync('__cart_list');
-    if(cart !== 'undefined' && cart){
-      this.setData({
-        cart
-      });
-      this.countCart();
-    } else {
-      cart = this.data.cart;
-      this.setData({
-        cart
-      });
+  initCart() {
+    let cart = App.globalData.cart;
+    let that = this;
+    var total = 0;
+    var origTotal = 0;
+    var count = 0;
+
+    for (let itemId in cart.items) {
+      let good = that.data.goods[itemId];
+      let quantity = cart.items[itemId];
+      if (good && quantity > 0) {
+        origTotal += good.origPrice * quantity;
+        total += good.price * quantity;
+        count++;
+      }
     }
+    cart.origTotal = origTotal;
+    cart.total = total;
+    cart.count = count;
+    this.setData({
+      cart: cart
+    });
   },
   countDiscounts() {
     let MAN_JIAN = this.data.discounts['MAN_JIAN'];
     let MAN_ZHE = this.data.discounts['MAN_ZHE'];
     let activities = this.data.activities;
     if (MAN_JIAN && MAN_JIAN.order_change.length > 0) {
-      let MAN_JIAN_TEXT = MAN_JIAN.order_change.map((active)=>{
+      let MAN_JIAN_TEXT = MAN_JIAN.order_change.map((active) => {
         let condition = active.condition;
         let discount = active.discount;
         return `满${condition}减${discount};`
@@ -82,7 +87,7 @@ Page({
       });
     }
     if (MAN_ZHE && MAN_ZHE.order_change.length > 0) {
-      let MAN_ZHE_TEXT = MAN_ZHE.order_change.map((active)=>{
+      let MAN_ZHE_TEXT = MAN_ZHE.order_change.map((active) => {
         let condition = active.condition;
         let discount = active.discount;
         return `满${condition}打${discount}折;`
@@ -99,7 +104,7 @@ Page({
       activities
     });
   },
-  initAnimation(){
+  initAnimation() {
     let animation = wx.createAnimation({
       duration: 1000,
       timingFunction: 'ease',
@@ -117,7 +122,7 @@ Page({
         animationData: this.animation.export()
       });
       if (n === length) {
-        setTimeout(()=>{
+        setTimeout(() => {
           n = 0;
           this.animation.top('0rpx').step();
           this.setData({
@@ -131,12 +136,12 @@ Page({
   didClickCategory: function (e) {
     var id = e.target.dataset.id;
     this.setData({
-      categoryViewed: id
+      categorySelected: id
     });
     var self = this;
     setTimeout(function () {
       self.setData({
-        categorySeleted: id
+        categorySelected: id
       });
     }, 100);
   },
@@ -149,58 +154,61 @@ Page({
   },
   _minusEvent() {
     /*减法*/
-    this.addCart(this.data.goodId, -1);
+    this.addCart(this.data.goodId, "minus");
   },
   _addEvent() {
     /*加法*/
-    this.addCart(this.data.goodId, 1);
+    this.addCart(this.data.goodId, "plus");
   },
   /*购物车操作*/
   tapAddCart: function (e) {
-    console.log(e);
-    this.addCart(e.target.dataset.id, 1);
+    this.addCart(e.target.dataset.id, "plus");
   },
   tapMinusCart(e) {
-    this.addCart(e.target.dataset.id, -1);
+    this.addCart(e.target.dataset.id, "minus");
   },
   addCart: function (id, n) {
-    let cartList = this.data.cart.list;
+    let cartList = this.data.cart.items;
     let goods = this.data.goods;
-    let count = cartList[id] ? cartList[id].count : 0;
-    if (count === 0 && n < 0) {
+    let count = cartList[id] ? cartList[id] : 0;
+    if (count === 0 && n === "minus") {
       return;
     }
-    count = count + n;
-    if (count) {
-      let price = goods[id]['price'];
-      let sale_price = goods[id]['sale_price'] || goods[id]['price'];
-      let total = Util.accMul(count, price);
-      let sale_total = Util.accMul(count, sale_price);
-      total = Util.formatMoney(total);
-      sale_total = Util.formatMoney(sale_total);
-      cartList[id] = {
-        sale_total,
-        total,
-        count
-      };
+    let cacheCount = this.data.cacheSync[id] ? this.data.cacheSync[id] : 0;
+    if (n === "minus") {
+      count--;
+      cacheCount--;
     } else {
-      delete cartList[id]
+      count++;
+      cacheCount++;
     }
-    this.countCart();
-  },
-  countCart: function () {
-    let count = 0, total = 0, sale_total = 0;
-    for (let id in this.data.cart.list) {
-      count += this.data.cart.list[id].count;
-      total += this.data.cart.list[id].total;
-      sale_total += this.data.cart.list[id].sale_total;
+    this.data.cacheSync[id] = cacheCount;
+    App.globalData.cart.items[id] = count;
+    this.initCart();
+
+    if (!this.isSync) {
+      this.isSync = true;
+      setTimeout(() => {
+        let cacheSync = JSON.parse(JSON.stringify(this.data.cacheSync));
+        this.data.cacheSync = {};
+        let items = [];
+        for (let cache in cacheSync) {
+          let value = cacheSync[cache];
+          if (value && value !== 0) {
+            items.push({
+              "id": cache,
+              "action": cache > 0 ? "plus" : "minus",
+              "amount": value
+            })
+          }
+        }
+        let that = this;
+        Data.getAddItem(items, (isDone) => {
+          that.initCart();
+          that.isSync = false
+        })
+      }, 5000)
     }
-    this.data.cart.count = count;
-    this.data.cart.total = total;
-    this.data.cart.sale_total = sale_total;
-    this.setData({
-      cart: this.data.cart
-    });
   },
   showCartDetail: function () {
     this.setData({
@@ -214,14 +222,11 @@ Page({
   },
   /*下单*/
   submit: function (e) {
-    let cart = this.data.cart
-    wx.setStorageSync('__cart_list', cart);
+    let cart = this.data.cart;
     Util.navigateTo({
       url: '../order/order'
     })
   },
-
-
   /*功能*/
   onGoodsScroll: function (e) {
     if (e.detail.scrollTop > 10 && !this.data.scrollDown) {
@@ -237,17 +242,24 @@ Page({
     var scale = e.detail.scrollWidth / 570,
       scrollTop = e.detail.scrollTop / scale,
       h = 0,
-      classifySeleted,
+      categorySelected,
       len = this.data.categories.length;
-    this.data.categories.forEach(function (classify, i) {
-      var _h = 70 + classify.goods.length * (46 * 3 + 20 * 2);
+    let that = this;
+    this.data.categories.forEach(function (category, i) {
+      var containCount = 0;
+      for (let itemId in that.data.goods) {
+        if (category.id === that.data.goods[itemId].category) {
+          containCount++;
+        }
+      }
+      var _h = 70 + containCount * (46 * 3 + 20 * 2);
       if (scrollTop >= h - 100 / scale) {
-        classifySeleted = classify.id;
+        categorySelected = category.categoryName;
       }
       h += _h;
     });
     this.setData({
-      classifySeleted: classifySeleted
+      categorySelected: categorySelected
     });
   },
 });

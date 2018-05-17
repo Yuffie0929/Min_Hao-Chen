@@ -9,9 +9,11 @@ App({
     shop: {
       logo: '../../images/web/logo.jpg',
       name: '赛百味(复兴门百盛店)',
-      desc: '专注味觉100年'
+      desc: '专注味觉100年',
+      id: 1,
     },
-
+    cart: {},
+    table:20,
     image_address: "http://192.168.1.11/sfa",
     tapFlag: true, /*检测0.5秒内是否有重复点击*/
     networkFlag: true, /*检测是否正在网络请求*/
