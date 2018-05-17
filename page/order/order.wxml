@@ -1,33 +1,34 @@
 <view class="container">
-	<!--订单信息 start-->
-	<view class="order-info">
-		<view class="store-title">
-			<image src="{{shop.logo}}"></image>
-			<text>{{shop.name}}</text>
-		</view>
-		<view class="order-list">
-			<view class="order-list-item" wx:for="{{cartList}}" wx:key="{{item.id}}"
-						wx:if="{{listShow || index < 3}}">
-				<image src="{{goods[item.id].pic}}"></image>
-				<view class="item-center">
-					<view class="name ellipsis">{{goods[[item.id]].name}}</view>
-					<view class="unit">{{goods[[item.id]].unit}}</view>
-					<view class="count">X{{item.count}}</view>
-				</view>
-				<view class="item-price">¥{{item.sale_total}}</view>
-			</view>
-		</view>
-		<view wx:if="{{cartList.length > 3}}" class="toggle-list {{listShow ?  'show' : 'hide'}}" bindtap="toggleList">{{ listShow ?  '点击收起' : '点击展开' }}</view>
-	</view>
-	<!--订单信息 end-->
+  <!--订单信息 start-->
+  <scroll-view class="order-info" scroll-y="true">
+    <view class="store-title">
+      <image src="{{shop.logo}}"></image>
+      <text>{{shop.name}}</text>
+    </view>
+    <view class="order-list">
+      <view class="order-list-item" wx:for="{{cart.items}}" wx:for-index="id" wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
+        <!-- <image src="{{goods[index].pic}}"></image> -->
+        <view class="item-center">
+          <view class="name ellipsis">{{goods[id].name}}</view>
+          <view class="unit">{{goods[id].unit}}</view>
+          <view class="count">X{{item}}</view>
+        </view>
+        <view class="item-price">¥{{goods[id].price * item}}</view>
+      </view>
+    </view>
+  </scroll-view>
 
-	<!--下单 start-->
-	<view class="order-footer">
-		<view class="price" bindtap="showCartDetail">
-			<view class="count">已优惠 ¥{{cartTotal - cartSaleTotal}}</view>
-			<view class="total"><text>合计</text> ¥{{cartSaleTotal}}</view>
-		</view>
-		<view class="submit" bindsubmit="submit">提交订单</view>
-	</view>
-	<!--下单 end-->
+
+  <!--订单信息 end-->
+
+  <!--下单 start-->
+  <view class="order-footer">
+    <view class="price" bindtap="showCartDetail">
+      <view class="count">已优惠 ¥{{cart.origTotal - cart.total}}</view>
+      <view class="total">
+        <text>合计</text> ¥{{cart.total}}</view>
+    </view>
+    <view class="submit" bindtap="didClickSubmit">提交订单</view>
+  </view>
+  <!--下单 end-->
 </view>
