@@ -3,12 +3,12 @@
   <scroll-view class="order-info" scroll-y="true">
     <view class="store-title">
       <image src="{{shop.logo}}"></image>
-      <text>{{shop.name}}</text>
+      <text>{{shop.restaurantName}}</text>
     </view>
     <view class="order-list">
       <view class="order-list-item" wx:for="{{cart.items}}" wx:for-index="id"
             wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
-        <image src="{{goods[id].pic}}"
+        <image mode='aspectFit' src="{{goods[id].pic}}"
                data-id="{{id}}"
                binderror="errImage"></image>
         <view class="item-center">

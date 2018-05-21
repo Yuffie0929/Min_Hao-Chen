@@ -2,6 +2,21 @@ import { GET, POST } from './network';
 const app = getApp();
 
 module.exports = {
+  getStoreDetail(callBack) {
+    let config = {
+      url: '/booking/restaurant/detail',
+      params: { restaurant_id: app.globalData.shop.id },
+      success_0(res) {
+        console.log(JSON.stringify(res));
+        app.globalData.shop = res;
+        callBack(true);
+      },
+      success_1(res) {
+        callBack(false);
+      }
+    }
+    POST(config);
+  },
   getGoods(config) {
     config.url = '/booking/restaurant/items';
     config.params = { restaurant_id: app.globalData.shop.id }
@@ -33,8 +48,8 @@ module.exports = {
   },
   syncOrder(callBack) {
     let config = {
-      url : '/booking/order/syncorder',
-      params : {
+      url: '/booking/order/syncorder',
+      params: {
         restaurant_id: app.globalData.shop.id,
         table_num: app.globalData.table
       },

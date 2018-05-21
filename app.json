@@ -10,7 +10,8 @@
 		"navigationBarTextStyle": "white",
 		"backgroundColor": "#efefef",
 		"backgroundTextStyle": "dark",
-		"navigationBarTitleText": "外卖订餐"
+		"navigationBarTitleText": "外卖订餐",
+    "disableScroll":true
 	},
 	"networkTimeout": {
 		"request": 10000,

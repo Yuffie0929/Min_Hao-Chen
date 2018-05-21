@@ -29,19 +29,29 @@ Page({
   didClickSubmit () {
     var items = [];
     for (let itemId in this.data.cart.items) {
-      items.push({
-          id:itemId,
-          price: this.data.goods[itemId].price * this.data.cart.items[itemId],
-          amount: this.data.cart.items[itemId]
+      let itemCount = this.data.cart.items[itemId];
+      if (itemCount > 0) {
+        items.push({
+          id: itemId,
+          price: this.data.goods[itemId].price * itemCount,
+          amount: itemCount
         });
-    }
-    Data.insertOrder(items, this.data.cart.total,(isDone)=>{
-      if (isDone) {
-        Util.alert("下单成功");
-      } else{
-        Util.alert("提交失败");
       }
-    })
+    }
+    if (items.length > 0) {
+      Data.insertOrder(items, this.data.cart.total, (isDone) => {
+        if (isDone) {
+          Util.alert("下单成功");
+          App.globalData.cart = {};
+          wx.navigateBack({
+          })
+        } else {
+          Util.alert("提交失败");
+        }
+      })
+    } else {
+      Util.alert("请先选择餐品");
+    }
   },
   errImage: function(e){
     let id = e.currentTarget.dataset.id;

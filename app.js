@@ -1,6 +1,15 @@
 App({
-	onLaunch: function () {
-		console.log('App Launch');
+  onLaunch: function (options) {
+    console.log('App Launch :' + JSON.stringify(options) + decodeURIComponent(options.scene));
+    if (options.scene != 1011) {
+      //扫码进入
+      wx.showToast(
+        {
+          title: '请扫描正确二维码进入',
+          icon: "none",
+        }
+      )
+    }
 	},
 	globalData: {
 		goods: {},

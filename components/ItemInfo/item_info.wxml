@@ -2,7 +2,7 @@
   <view class='wx-mask' bindtap='_closeEvent'></view>
   <view class='c-item_info'>
     <view class="c-item_info-image">
-       <image src="{{good.pic}}" mode="widthFix"></image>
+       <image mode='aspectFit' src="{{good.pic}}" mode="widthFix"></image>
     </view>
     <view class='c-item_info-content'>
       <view class="name ellipsis">{{good.name}}</view>

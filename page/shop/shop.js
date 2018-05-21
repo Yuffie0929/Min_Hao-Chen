@@ -14,6 +14,7 @@ Page({
     activities: [],
     showCartDetail: false,
     isSync: false,
+    isCancelSync: false,
     cacheSync: {},
     categorySelected: '',
     categorySelectedStyle: ''
@@ -24,7 +25,7 @@ Page({
       that.initCart();
       that.countDiscounts();
       wx.setNavigationBarTitle({
-        title: that.data.shop.name
+        title: that.data.shop.restaurantName
       })
       that.initAnimation();
     });
@@ -32,6 +33,14 @@ Page({
   },
   onReady: function () {
     this.dialog = this.selectComponent("#item_info");
+  },
+  onShow: function () {
+    let that = this;
+    Util.showHub('Loading...');
+    Data.syncOrder((isDone) => {
+      that.initCart();
+      Util.hideHub();
+    });
   },
 
   getDatas(cb) {
@@ -127,7 +136,7 @@ Page({
       if (n === length) {
         setTimeout(() => {
           n = 0;
-          this.animation.top('0rpx').step({duration: 1});
+          this.animation.top('0rpx').step({ duration: 1 });
           this.setData({
             animationData: this.animation.export()
           })
@@ -144,7 +153,7 @@ Page({
     });
     this.categorySelectedFlag = false;
     let that = this;
-    setTimeout(()=>{
+    setTimeout(() => {
       that.categorySelectedFlag = true;
     }, 100)
   },
@@ -187,31 +196,48 @@ Page({
     this.data.cacheSync[id] = cacheCount;
     App.globalData.cart.items[id] = count;
     this.initCart();
+    this.prepareSyncCart();
+  },
 
+  prepareSyncCart: function () {
     if (!this.isSync) {
+      let that = this;
       this.isSync = true;
       setTimeout(() => {
-        let cacheSync = JSON.parse(JSON.stringify(this.data.cacheSync));
-        this.data.cacheSync = {};
-        let items = [];
-        for (let cache in cacheSync) {
-          let value = cacheSync[cache];
-          if (value && value !== 0) {
-            items.push({
-              "id": cache,
-              "action": cache > 0 ? "plus" : "minus",
-              "amount": value
-            })
-          }
+        if (!that.isCancelSync) {
+          Util.showHub('Loading...');
+          that.syncCart((isDone)=> {
+            that.initCart();
+            that.isSync = false;
+            Util.hideHub();
+          });
+        } else {
+          that.isSync = false;
+          that.isCancelSync = false;
         }
-        let that = this;
-        Data.getAddItem(items, (isDone) => {
-          that.initCart();
-          that.isSync = false
-        })
       }, 5000)
     }
   },
+  syncCart: function (callBack) {
+    let cacheSync = JSON.parse(JSON.stringify(this.data.cacheSync));
+    this.data.cacheSync = {};
+    let items = [];
+    for (let cache in cacheSync) {
+      let value = cacheSync[cache];
+      if (value && value !== 0) {
+        items.push({
+          "id": cache,
+          "action": cache > 0 ? "plus" : "minus",
+          "amount": value
+        })
+      }
+    }
+    let that = this;
+    Data.getAddItem(items, (isDone) => {
+      callBack(isDone);
+    })
+  },
+
   showCartDetail: function () {
     this.setData({
       showCartDetail: !this.data.showCartDetail
@@ -224,9 +250,22 @@ Page({
   },
   /*下单*/
   submit: function (e) {
-    let cart = this.data.cart;
-    Util.navigateTo({
-      url: '../order/order'
+    Util.showHub('Loading...');
+    this.isCancelSync = true;
+    let that = this;
+    this.syncCart((isDone) => {
+      if (isDone) {
+        Util.hideHub();
+        that.initCart();
+        Util.navigateTo({
+          url: '../order/order'
+        })
+      } else {
+        setTimeout(() => {
+          Util.hideHub();
+          that.submit();
+        }, 2000)
+      }
     })
   },
   /*功能*/
@@ -240,7 +279,7 @@ Page({
         scrollDown: false
       });
     }
-    if(!this.categorySelectedFlag)return;
+    if (!this.categorySelectedFlag) return;
     let scale = e.detail.scrollWidth / 570,
       scrollTop = e.detail.scrollTop / scale,
       h = 0,
@@ -253,10 +292,10 @@ Page({
       h += _h;
     });
     this.setData({
-      categorySelectedStyle: categorySelectedStyle
+      categorySelectedStyle: categorySelectedStyle ? categorySelectedStyle : 'id' + this.data.categories[0].id
     });
   },
-  errImage: function(e){
+  errImage: function (e) {
     let id = e.currentTarget.dataset.id;
     let goods = this.data.goods;
     goods[id].pic = '../../images/errImage.png';

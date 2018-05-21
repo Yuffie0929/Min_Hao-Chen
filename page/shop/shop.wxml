@@ -9,11 +9,11 @@
 	<!--餐品详情 end-->
 
 	<!--门店信息 start-->
-	<view class="header {{scrollDown?'hidden':''}}">
+	<view class="header">
 		<image class="logo" src="{{shop.logo}}"/>
 		<view class="info">
-			<view class="welcome ellipsis">公告：欢迎光临{{shop.name}}！</view>
-			<view class="desc ellipsis">{{shop.desc}}</view>
+			<view class="welcome ellipsis">公告：欢迎光临{{shop.restaurantName}}！</view>
+			<view class="desc ellipsis">{{shop.remark}}</view>
 
 			<view class="active-wrapper">
 				<!--<view class="active-arrow"></view>-->
@@ -44,10 +44,10 @@
 			<view wx:for="{{categories}}" wx:for-index="id" wx:for-item="category" wx:key="id" id="id{{category.id}}">
 				<view class="title">{{category.categoryName}}</view>
 				<view class="goods" wx:for="{{goods}}" wx:for-index="itemId" wx:for-item="item" wx:key="id"
-							bindtap="didClickItem" data-id="{{item.id}}" wx:if="{{item.category == category.id}}">
-					<image class="good-pic" src="{{item.pic}}"
+							 data-id="{{item.id}}" wx:if="{{item.category == category.id}}">
+					<image mode='aspectFit' class="good-pic" src="{{item.pic}}"
 								 data-id="{{item.id}}"
-								 binderror="errImage"></image>
+								 binderror="errImage" bindtap="didClickItem"></image>
 					<view class="good-info">
 						<view class="name ellipsis">{{item.name}}</view>
 						<view class="desc ellipsis">{{item.description}}</view>
@@ -87,7 +87,7 @@
 	<!--购物车详情 start-->
 	<view class="cart-detail" hidden="{{!showCartDetail||!cart.count}}">
 		<view class="mask" bindtap="hideCartDetail"></view>
-		<view class="list">
+		<scroll-view class="list"  scroll-y="true">
 			<view class="item" wx:for="{{cart.items}}" wx:for-index="id" wx:for-item="item" wx:key="{{id}}" wx:if="{{item > 0}}">
 				<view class="name ellipsis">{{goods[id].name}}</view>
 				<view class="total">￥{{goods[id].price * item}}</view>
@@ -95,7 +95,7 @@
 				<view class="num">{{item}}</view>
 				<view class="add" data-id="{{id}}" bindtap="tapAddCart">+</view>
 			</view>
-		</view>
+		</scroll-view>
 	</view>
 	<!--购物车详情 end-->
 

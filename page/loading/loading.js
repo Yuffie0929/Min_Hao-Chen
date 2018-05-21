@@ -5,6 +5,17 @@ Page({
   data: {
   },
   onLoad: function (options) {
+    let that = this
+    Data.getStoreDetail((isDone)=>{
+      if(isDone) {
+        that.reqAllInfo();
+      }
+    })
+  },
+  onShow: function () {
+
+  },
+  reqAllInfo() {
     let that = this;
     Promise.all([this.reqGoods(), this.reqCategories(), this.reqDiscount()]).then(function (res) {
       let goods = res[0];
@@ -19,46 +30,29 @@ Page({
         });
       }
 
-      Object.keys(goods).map((key)=>{
+      Object.keys(goods).map((key) => {
         let good = goods[key];
-        categories = categories.map((category)=>{
-          if(category.id === good.category){
+        categories = categories.map((category) => {
+          if (category.id === good.category) {
             category.goods.push(good.id);
           }
           return category;
         })
       });
 
-      categories = categories.filter((category)=>{
+      categories = categories.filter((category) => {
         return category.goods.length > 0;
       });
 
       app.globalData.categories = categories;
       app.globalData.goods = goods;
       app.globalData.discounts = discounts;
-      that.reqTableOrder()
+      wx.redirectTo({
+        url: '../shop/shop'
+      })
     }, function (res) {
       console.log(res);
     });
-  },
-  onShow: function () {
-
-  },
-
-  /*获取门店已有订单*/
-  reqTableOrder() {
-    let that = this;
-    Data.syncOrder ((isDone)=>{
-      if(isDone) {
-        wx.redirectTo({
-          url: '../shop/shop'
-        })
-      } else {
-        setTimeout(() => {
-          that.reqTableOrder();
-        }, 2000)
-      }
-    })
   },
   /*获取品类信息*/
   reqCategories() {
@@ -126,7 +120,7 @@ Page({
   formatGoodsData(goods) {
     let obj = {};
     goods.map((good) => {
-      good.pic = '../../images/web' + good.image + '.jpg';
+      good.pic = 'http://13.209.5.115:8080/booking/items/101.jpg';
       delete good.image;
       obj[good.id] = good;
     });

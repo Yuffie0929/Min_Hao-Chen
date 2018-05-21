@@ -161,7 +161,14 @@ const alert = (title) => {
     }
   )
 };
-
+const showHub = (title) => {
+  wx.showLoading({
+    title: title,
+  })
+};
+const hideHub = (title) => {
+  wx.hideLoading();
+};
 module.exports = {
   formatTimeByTpl,
   formatMoney,
@@ -171,5 +178,7 @@ module.exports = {
   accMul,
   accDiv,
   navigateTo,
-  alert
+  alert,
+  showHub,
+  hideHub
 }
