@@ -74,10 +74,12 @@ page {
 }
 
 .content-container {
+	position: absolute;
+	top: 190rpx;
+	left: 0;
+	right: 0;
+	bottom: 100rpx;
 	display: -webkit-flex;
-	height: 100%;
-	box-sizing: border-box;
-	padding-bottom: 100rpx;
 }
 .classify-container {
 	width: 180rpx;
